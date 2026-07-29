@@ -49,7 +49,7 @@
                 <div class="mini-avatar">AN</div>
                 <div>
                     <div class="role-badge">Supervisi</div>
-                    <div class="role-name">Andi (Agronomi)</div>
+                    <div class="role-name">{{ auth()->user() ? auth()->user()->name : 'Super Visor' }}</div>
                 </div>
             </div>
         </div>

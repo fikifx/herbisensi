@@ -5,12 +5,23 @@ namespace Database\Seeders;
 use App\Models\Block;
 use App\Models\Evaluasi;
 use App\Models\Pemakaian;
+use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        // Seeder User Login
+        User::updateOrCreate(
+            ['email' => 'admin@herbi.com'],
+            [
+                'name' => 'Super Visor',
+                'password' => Hash::make('password123'),
+            ]
+        );
+
         $blocks = [
             [
                 'block_code' => 'A12', 'afdeling' => 'OF', 'luas' => 20,

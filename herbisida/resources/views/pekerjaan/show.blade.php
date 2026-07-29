@@ -94,3 +94,77 @@
         </div>
     </div>
 @endsection
+
+@section('modal_content')
+    <form id="crud-form" method="POST" enctype="multipart/form-data" data-store-url="{{ route('pekerjaan.store') }}" data-update-base-url="{{ url('pekerjaan') }}">
+        @csrf
+        <input type="hidden" name="_method" id="f-method" value="POST">
+        
+        <!-- Form Manual -->
+        <div class="f-row-2">
+            <div>
+                <label class="f-label">Kode Blok</label>
+                <input type="text" name="block_code" id="f-block-code" class="f-input" placeholder="Misal: A15" required>
+            </div>
+            <div>
+                <label class="f-label">Afdeling</label>
+                <select name="afdeling" id="f-afdeling" class="f-select">
+                    <option value="OF">OF</option>
+                    <option value="OB">OB</option>
+                    <option value="OH">OH</option>
+                    <option value="OD">OD</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="f-row">
+            <label class="f-label">Jenis Gulma</label>
+            <input type="text" name="gulma" id="f-gulma" class="f-input" required>
+        </div>
+
+        <div class="f-row-2">
+            <div>
+                <label class="f-label">Kerapatan</label>
+                <select name="kerapatan" id="f-kerapatan" class="f-select">
+                    <option value="Rendah">Rendah</option>
+                    <option value="Sedang" selected>Sedang</option>
+                    <option value="Tinggi">Tinggi</option>
+                </select>
+            </div>
+            <div>
+                <label class="f-label">Herbisida</label>
+                <input type="text" name="herbisida" id="f-herbisida" class="f-input" required>
+            </div>
+        </div>
+
+        <div class="f-row-2">
+            <div>
+                <label class="f-label">Luas (Ha)</label>
+                <input type="number" step="0.01" name="luas" id="f-luas" class="f-input" oninput="autoCalcRek()" required>
+            </div>
+            <div>
+                <label class="f-label">Dosis (L/Ha)</label>
+                <input type="number" step="0.01" name="dosis" id="f-dosis" class="f-input" oninput="autoCalcRek()" required>
+            </div>
+        </div>
+
+        <div class="f-row-2">
+            <div>
+                <label class="f-label">Rek. Total (L)</label>
+                <input type="number" name="rekomendasi" id="f-rekomendasi" class="f-input" readonly style="background:#F4F7F1">
+            </div>
+            <div>
+                <label class="f-label">Status</label>
+                <select name="status" id="f-status" class="f-select">
+                    <option value="Belum Selesai">Belum Selesai</option>
+                    <option value="Selesai">Selesai</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="modal-footer" style="margin: 0 -26px -22px; padding-bottom: 22px;">
+            <button type="button" class="d-btn d-btn-ghost" onclick="closeModal()">Batal</button>
+            <button type="submit" class="d-btn d-btn-primary">Simpan Blok</button>
+        </div>
+    </form>
+@endsection

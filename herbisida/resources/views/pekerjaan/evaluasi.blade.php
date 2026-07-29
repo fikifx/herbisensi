@@ -18,13 +18,21 @@
 
         <div style="margin-top:16px; margin-bottom:16px;">
             <label style="display:block; font-size:12px; font-weight:700; margin-bottom:6px;">📸 Foto Sebelum Aplikasi</label>
-            <input type="file" id="foto_sebelum" name="foto_sebelum" accept="image/*" style="font-size:11px;">
+            <label class="photobox" for="foto_sebelum" style="border-color: rgba(255,255,255,0.3); background: rgba(0,0,0,0.1); color:#fff; margin-bottom:8px; height: 100px;">
+                <svg viewBox="0 0 24 24" stroke="currentColor" style="stroke: #fff;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                <span id="lbl-sebelum-m">Upload Foto Sebelum</span>
+            </label>
+            <input type="file" id="foto_sebelum" name="foto_sebelum" accept="image/*" style="display:none;" onchange="document.getElementById('lbl-sebelum-m').innerText = this.files[0] ? this.files[0].name : 'Upload Foto Sebelum'">
             <img id="preview-sebelum" class="photo-preview" style="margin-top:10px;">
         </div>
 
         <div style="margin-bottom:20px;">
             <label style="display:block; font-size:12px; font-weight:700; margin-bottom:6px;">📸 Foto Sesudah Aplikasi (H+14)</label>
-            <input type="file" id="foto_sesudah" name="foto_sesudah" accept="image/*" style="font-size:11px;">
+            <label class="photobox" for="foto_sesudah" style="border-color: rgba(255,255,255,0.3); background: rgba(0,0,0,0.1); color:#fff; margin-bottom:8px; height: 100px;">
+                <svg viewBox="0 0 24 24" stroke="currentColor" style="stroke: #fff;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                <span id="lbl-sesudah-m">Upload Foto Sesudah</span>
+            </label>
+            <input type="file" id="foto_sesudah" name="foto_sesudah" accept="image/*" style="display:none;" onchange="document.getElementById('lbl-sesudah-m').innerText = this.files[0] ? this.files[0].name : 'Upload Foto Sesudah'">
             <img id="preview-sesudah" class="photo-preview" style="margin-top:10px;">
         </div>
         
@@ -75,15 +83,26 @@
                 <h3 style="font-size:18px;">🤖 Evaluasi Efektivitas AI - {{ $block->block_code }}</h3>
                 <p style="font-size:13px;">Upload foto sebelum dan sesudah aplikasi herbisida untuk dianalisis oleh AI. AI akan menghitung persentase efektivitas pengendalian gulma.</p>
 
-                <div class="d-table-row" style="padding:16px 0; border-bottom:1px solid rgba(255,255,255,0.1); align-items:flex-start;">
-                    <div style="flex:1;">
+                <div style="display:flex; flex-wrap:wrap; gap:16px; border-bottom:1px solid rgba(255,255,255,0.1); padding:16px 0; align-items:flex-start;">
+                    <div style="flex: 1 1 45%; min-width: 200px;">
                         <label style="display:block; font-size:12px; font-weight:700; margin-bottom:8px;">📸 Foto Sebelum</label>
-                        <input type="file" id="foto_sebelum" name="foto_sebelum" accept="image/*" style="font-size:12px; width:100%;">
+                        <label class="photobox" for="d_foto_sebelum" style="border-color: rgba(255,255,255,0.3); background: rgba(0,0,0,0.1); color:#fff; margin-bottom:8px; height: 120px;">
+                            <svg viewBox="0 0 24 24" stroke="currentColor" style="stroke: #fff;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                            <span id="lbl-sebelum-d">Upload Foto Sebelum</span>
+                        </label>
+                        <!-- Menggunakan id dan onchange event dispatcher karena ai-scan.js bind ke ID foto_sebelum -->
+                        <input type="file" id="foto_sebelum" name="foto_sebelum" accept="image/*" style="display:none;" onchange="document.getElementById('lbl-sebelum-d').innerText = this.files[0] ? this.files[0].name : 'Upload Foto Sebelum';">
+                        <input type="file" id="d_foto_sebelum" style="display:none;" onchange="const d=new DataTransfer();d.items.add(this.files[0]);document.getElementById('foto_sebelum').files=d.files;document.getElementById('foto_sebelum').dispatchEvent(new Event('change'));">
                         <img id="preview-sebelum" class="photo-preview" style="margin-top:12px; max-height:200px; max-width:100%;">
                     </div>
-                    <div style="flex:1; padding-left:16px;">
+                    <div style="flex: 1 1 45%; min-width: 200px;">
                         <label style="display:block; font-size:12px; font-weight:700; margin-bottom:8px;">📸 Foto Sesudah (H+14)</label>
-                        <input type="file" id="foto_sesudah" name="foto_sesudah" accept="image/*" style="font-size:12px; width:100%;">
+                        <label class="photobox" for="d_foto_sesudah" style="border-color: rgba(255,255,255,0.3); background: rgba(0,0,0,0.1); color:#fff; margin-bottom:8px; height: 120px;">
+                            <svg viewBox="0 0 24 24" stroke="currentColor" style="stroke: #fff;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                            <span id="lbl-sesudah-d">Upload Foto Sesudah</span>
+                        </label>
+                        <input type="file" id="foto_sesudah" name="foto_sesudah" accept="image/*" style="display:none;" onchange="document.getElementById('lbl-sesudah-d').innerText = this.files[0] ? this.files[0].name : 'Upload Foto Sesudah';">
+                        <input type="file" id="d_foto_sesudah" style="display:none;" onchange="const d=new DataTransfer();d.items.add(this.files[0]);document.getElementById('foto_sesudah').files=d.files;document.getElementById('foto_sesudah').dispatchEvent(new Event('change'));">
                         <img id="preview-sesudah" class="photo-preview" style="margin-top:12px; max-height:200px; max-width:100%;">
                     </div>
                 </div>

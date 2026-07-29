@@ -4,8 +4,8 @@
 
 @section('content_mobile')
 <div style="display:flex; flex-direction:column; align-items:center; margin-top:20px; margin-bottom:30px;">
-    <div class="avatar" style="width:80px; height:80px; font-size:28px; margin-bottom:12px;">AN</div>
-    <h2 style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:20px; color:var(--forest);">Andi Setiawan</h2>
+    <div class="avatar" style="width:80px; height:80px; font-size:28px; margin-bottom:12px;">{{ strtoupper(substr(auth()->user()->name ?? 'Super Visor', 0, 2)) }}</div>
+    <h2 style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:20px; color:var(--forest);">{{ auth()->user()->name ?? 'Super Visor' }}</h2>
     <div style="font-size:13px; color:var(--ink-soft); margin-top:4px;">Supervisor Agronomi • Divisi 1</div>
 </div>
 
@@ -37,19 +37,25 @@
     </a>
 </div>
 
-<button class="btn ghost" style="color:var(--red); border-color:var(--red); margin-top:30px;">Keluar Aplikasi</button>
+<form action="{{ route('logout') }}" method="POST" style="margin-top:30px;">
+    @csrf
+    <button type="submit" class="btn ghost" style="color:var(--red); border-color:var(--red); width:100%;">Keluar Aplikasi</button>
+</form>
 @endsection
 
 @section('content_desktop')
 <div class="d-page-2col">
     <div>
         <div class="d-card" style="text-align:center; padding:40px 20px;">
-            <div class="avatar" style="width:100px; height:100px; font-size:36px; margin:0 auto 16px; background:linear-gradient(135deg,var(--leaf),var(--forest-2));">AN</div>
-            <h2 style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:24px; color:var(--forest);">Andi Setiawan</h2>
+            <div class="avatar" style="width:100px; height:100px; font-size:36px; margin:0 auto 16px; background:linear-gradient(135deg,var(--leaf),var(--forest-2));">{{ strtoupper(substr(auth()->user()->name ?? 'Super Visor', 0, 2)) }}</div>
+            <h2 style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:24px; color:var(--forest);">{{ auth()->user()->name ?? 'Super Visor' }}</h2>
             <div class="d-badge done" style="margin-top:10px; font-size:13px; padding:6px 16px;">Supervisor Agronomi</div>
             <p style="font-size:14px; color:var(--ink-soft); margin-top:16px;">Menangani area Divisi 1 yang meliputi Afdeling OF, OB, OH, dan OD.</p>
             
-            <button class="d-btn d-btn-ghost d-btn-full" style="color:var(--red); border-color:var(--red); margin-top:30px;">Log Out</button>
+            <form action="{{ route('logout') }}" method="POST" style="margin-top:30px;">
+                @csrf
+                <button type="submit" class="d-btn d-btn-ghost d-btn-full" style="color:var(--red); border-color:var(--red);">Log Out</button>
+            </form>
         </div>
     </div>
     

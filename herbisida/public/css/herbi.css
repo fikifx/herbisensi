@@ -217,7 +217,8 @@ body{margin:0;font-family:'Inter',system-ui,sans-serif;background:var(--paper);c
   .d-job-gulma{font-size:12px;color:#5B6B60;margin-bottom:8px;line-height:1.4;}
   .d-job-meta{display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
   .d-job-chip{font-size:11px;font-weight:600;color:#5B6B60;}
-  .d-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:12px;cursor:pointer;font-family:'Inter',sans-serif;font-weight:700;transition:all .18s;text-decoration:none;}
+  .d-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:12px;cursor:pointer;font-family:'Inter',sans-serif;font-weight:700;transition:all .18s;text-decoration:none;white-space:nowrap;}
+  .d-btn svg{width:18px;height:18px;stroke-width:2.2;fill:none;flex-shrink:0;}
   .d-btn-primary{background:linear-gradient(135deg,#183F30,#22553F);color:#fff;padding:13px 28px;font-size:14px;box-shadow:0 4px 16px rgba(24,63,48,.25);}
   .d-btn-primary:hover{box-shadow:0 8px 28px rgba(24,63,48,.35);transform:translateY(-1px);}
   .d-btn-green{background:linear-gradient(135deg,#7CB93B,#5da320);color:#fff;padding:13px 28px;font-size:14px;box-shadow:0 4px 16px rgba(124,185,59,.3);}

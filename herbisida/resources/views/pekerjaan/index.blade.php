@@ -46,7 +46,7 @@
 
     <div class="d-card" style="margin-bottom:24px;">
         <div class="d-card-body">
-            <div style="display:flex; gap:16px;">
+            <div style="display:flex; gap:16px; align-items:center;">
                 <div style="flex:1;">
                     <input type="text" class="d-search" style="margin:0;" placeholder="Cari kode blok..." id="d-search-input">
                 </div>
@@ -88,7 +88,11 @@
         <div class="ai-scan-box">
             <h3>🤖 Deteksi Gulma Otomatis</h3>
             <p>Upload foto gulma, biarkan AI yang mengenali jenis dan merekomendasikan herbisida.</p>
-            <input type="file" id="ai-foto-input" name="gulma_foto" accept="image/*" style="margin-bottom:10px; font-size:12px; max-width:100%;">
+            <label class="photobox" for="ai-foto-input" style="border-color: rgba(255,255,255,0.3); background: rgba(0,0,0,0.1); color:#fff; margin-bottom:8px;">
+                <svg viewBox="0 0 24 24" stroke="currentColor" style="stroke: #fff;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                <span id="ai-filename-label">Klik untuk Upload / Ambil Foto</span>
+            </label>
+            <input type="file" id="ai-foto-input" name="gulma_foto" accept="image/*" style="display:none;" onchange="document.getElementById('ai-filename-label').innerText = this.files[0] ? this.files[0].name : 'Klik untuk Upload / Ambil Foto'">
             <input type="hidden" name="gulma_ai_raw" id="f-gulma_ai_raw">
             
             <img id="ai-foto-preview" class="photo-preview" alt="Preview">

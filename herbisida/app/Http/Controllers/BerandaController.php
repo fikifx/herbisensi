@@ -20,9 +20,11 @@ class BerandaController extends Controller
         $now   = now()->locale('id')->isoFormat('dddd, D MMMM YYYY');
         $greeting = now()->hour < 12 ? 'Selamat pagi' : (now()->hour < 18 ? 'Selamat siang' : 'Selamat malam');
 
+        $recentTasks = $blocks->sortBy('status')->take(3); // Menampilkan yang Belum Selesai dulu
+
         return view('beranda.index', compact(
             'totalBlok', 'selesai', 'belumSelesai',
-            'totalRek', 'totalAkt', 'efisiensi', 'now', 'greeting'
+            'totalRek', 'totalAkt', 'efisiensi', 'now', 'greeting', 'recentTasks'
         ));
     }
 }
