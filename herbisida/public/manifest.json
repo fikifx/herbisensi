@@ -1,0 +1,22 @@
+{
+  "name": "HERBI Sense",
+  "short_name": "HERBI Sense",
+  "description": "Sistem Manajemen Herbisida Presisi",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F4F7F1",
+  "theme_color": "#183F30",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}

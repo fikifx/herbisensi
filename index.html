@@ -1516,7 +1516,7 @@ function screenDetail(){
       <div style="font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:700;color:var(--forest);">${b.rekomendasi} Liter</div>
     </div>
     <button class="btn" onclick="goScan()">Mulai Pemakaian</button>
-    ${b.riwayat.length ? `<div class="link" onclick="openRiwayat('${b.id}')">Lihat riwayat pemakaian →</div>`:''}
+    ${b.riwayat.length ? `<button class="btn ghost" style="margin-top:10px;" onclick="openRiwayat('${b.id}')">Lihat riwayat pemakaian →</button>`:''}
   `;
 }
 
@@ -1535,7 +1535,7 @@ function screenScan(){
         <div class="row"><span class="lbl">Netto</span><span class="val">20 Liter</span></div>
       </div>
       ${(state.tab==='pekerjaan' && state.selected) ? `<button class="btn" onclick="confirmScan()">Tambah ke Pemakaian</button>` : `<div class="note" style="margin-top:14px;">Buka lewat tab Pekerjaan → pilih blok, agar hasil scan bisa ditambahkan ke pemakaian.</div>`}
-    ` : `<div class="link" style="display:block;text-align:center;" onclick="simulateScan()">Input Manual</div>`}
+    ` : `<button class="btn ghost" style="margin-top:10px;" onclick="simulateScan()">Input Manual</button>`}
   `;
 }
 
@@ -1560,7 +1560,7 @@ function screenRiwayat(){
       `).join('')}
     </div>
     <button class="btn" onclick="finishUsage()">Selesai Pemakaian</button>
-    <div class="link" style="display:block;text-align:center;" onclick="openEvaluasi('${b.id}')">Evaluasi Efektivitas (opsional) →</div>
+    <button class="btn ghost" style="margin-top:10px;" onclick="openEvaluasi('${b.id}')">Evaluasi Efektivitas (opsional) →</button>
   `;
 }
 
@@ -2104,9 +2104,7 @@ function dScreenRiwayat(){
           </div>
         </div>
         <button class="d-btn d-btn-primary d-btn-full" onclick="finishUsage()">✅ Selesai Pemakaian</button>
-        <div style="text-align:center;margin-top:12px">
-          <a class="link" onclick="openEvaluasi('${b.id}')">Evaluasi Efektivitas (opsional) →</a>
-        </div>
+        <button class="d-btn d-btn-ghost d-btn-full" style="margin-top:10px" onclick="openEvaluasi('${b.id}')">Evaluasi Efektivitas (opsional) →</button>
       </div>
       <div>
         <div class="d-card">
