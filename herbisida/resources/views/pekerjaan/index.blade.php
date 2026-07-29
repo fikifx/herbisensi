@@ -97,7 +97,7 @@
             
             <img id="ai-foto-preview" class="photo-preview" alt="Preview">
             
-            <button type="button" id="ai-analyze-btn" class="d-btn d-btn-ghost d-btn-full" style="border:none; margin-top:0;" onclick="aiScanGulma.analyze()">
+            <button type="button" id="ai-analyze-btn" class="btn ghost" style="border:none; margin-top:0; width:100%;" onclick="aiScanGulma.analyze()">
                 🤖 Analisis AI
             </button>
             
@@ -197,9 +197,9 @@
             </div>
         </div>
         
-        <div class="modal-footer" style="margin: 0 -26px -22px; padding-bottom: 22px;">
-            <button type="button" class="d-btn d-btn-ghost" onclick="closeModal()">Batal</button>
-            <button type="submit" class="d-btn d-btn-primary">Simpan Blok</button>
+        <div class="modal-footer" style="margin: 0 -26px -22px; padding-bottom: 22px; display:flex; gap:12px; align-items:center;">
+            <button type="button" class="btn ghost" style="margin:0; flex:1;" onclick="closeModal()">Batal</button>
+            <button type="submit" class="btn leaf" style="margin:0; flex:1;">Simpan Blok</button>
         </div>
     </form>
 @endsection
