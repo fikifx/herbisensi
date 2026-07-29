@@ -95,18 +95,18 @@ const aiScanGulma = {
 
 // ===== SCAN EVALUASI (Dua Foto) =====
 const aiScanEvaluasi = {
-  async analyze() {
-    const fotoBefore = document.getElementById('foto_sebelum');
-    const fotoAfter  = document.getElementById('foto_sesudah');
+  async analyze(prefix = '') {
+    const fotoBefore = document.getElementById(prefix + 'foto_sebelum');
+    const fotoAfter  = document.getElementById(prefix + 'foto_sesudah');
 
     if (!fotoBefore?.files[0] || !fotoAfter?.files[0]) {
       alert('Upload kedua foto (sebelum & sesudah) terlebih dahulu!');
       return;
     }
 
-    const loader = document.getElementById('ai-eval-loader');
-    const result = document.getElementById('ai-eval-result');
-    const btn    = document.getElementById('ai-eval-btn');
+    const loader = document.getElementById(prefix + 'ai-eval-loader');
+    const result = document.getElementById(prefix + 'ai-eval-result');
+    const btn    = document.getElementById(prefix + 'ai-eval-btn');
 
     if (loader) loader.classList.add('show');
     if (result) result.style.display = 'none';
@@ -127,18 +127,21 @@ const aiScanEvaluasi = {
         const d = data.data;
 
         // Auto-fill form
-        setFieldIfExists('efektivitas', d.efektivitas);
-        setFieldIfExists('kategori',    d.kategori);
-        setFieldIfExists('catatan',     d.catatan);
-        setFieldIfExists('foto_ai_raw', JSON.stringify(d));
+        setFieldIfExists(prefix + 'efektivitas', d.efektivitas);
+        setFieldIfExists(prefix + 'kategori',    d.kategori);
+        setFieldIfExists(prefix + 'catatan',     d.catatan);
+        setFieldIfExists(prefix + 'foto_ai_raw', JSON.stringify(d));
 
         // Show result
         if (result) {
           result.style.display = 'block';
-          document.getElementById('ai-eval-efektivitas').textContent = d.efektivitas + '%';
-          document.getElementById('ai-eval-kategori').textContent    = d.kategori;
-          document.getElementById('ai-eval-catatan').textContent     = d.catatan;
-          const bar = document.getElementById('ai-eval-bar');
+          const effEl = document.getElementById(prefix + 'ai-eval-efektivitas');
+          if (effEl) effEl.textContent = d.efektivitas + '%';
+          const catEl = document.getElementById(prefix + 'ai-eval-kategori');
+          if (catEl) catEl.textContent = d.kategori;
+          const noteEl = document.getElementById(prefix + 'ai-eval-catatan');
+          if (noteEl) noteEl.textContent = d.catatan;
+          const bar = document.getElementById(prefix + 'ai-eval-bar');
           if (bar) bar.style.width = d.efektivitas + '%';
         }
       } else {
@@ -180,6 +183,8 @@ function setFieldIfExists(id, value) {
 // Init on DOM ready
 document.addEventListener('DOMContentLoaded', () => {
   aiScanGulma.init();
-  setupPhotoPreview('foto_sebelum', 'preview-sebelum');
-  setupPhotoPreview('foto_sesudah', 'preview-sesudah');
+  setupPhotoPreview('m_foto_sebelum', 'm_preview-sebelum');
+  setupPhotoPreview('m_foto_sesudah', 'm_preview-sesudah');
+  setupPhotoPreview('d_foto_sebelum', 'd_preview-sebelum');
+  setupPhotoPreview('d_foto_sesudah', 'd_preview-sesudah');
 });

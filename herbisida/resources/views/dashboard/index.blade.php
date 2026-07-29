@@ -72,6 +72,26 @@
         </div>
     </div>
     <div class="note">Blok merah menandakan pemakaian herbisida melebihi dosis rekomendasi lebih dari 20%. Diperlukan kalibrasi alat semprot (sprayer).</div>
+@elseif($tab == 'laporan')
+    <div class="card" style="padding:0; overflow:hidden;">
+        <div style="padding:16px; border-bottom:1px solid rgba(0,0,0,0.05); font-weight:700; color:var(--forest);">Laporan Pemakaian per Blok</div>
+        @foreach($blocks as $b)
+            <div class="rank-item" style="padding:12px 16px;">
+                <div>
+                    <div class="code" style="margin-bottom:4px;">{{ $b->block_code }}</div>
+                    <div style="font-size:11px; color:var(--ink-soft);">Target: {{ $b->gulma }}</div>
+                </div>
+                <div style="text-align:right;">
+                    <div style="font-size:13.5px; font-weight:700; color:var(--forest);">{{ $b->aktual }} L</div>
+                    @if($b->aktual > $b->rekomendasi)
+                        <div style="font-size:10.5px; color:var(--red);">Over +{{ $b->aktual - $b->rekomendasi }} L</div>
+                    @else
+                        <div style="font-size:10.5px; color:var(--leaf);">Sesuai Budget</div>
+                    @endif
+                </div>
+            </div>
+        @endforeach
+    </div>
 @endif
 @endsection
 
@@ -160,6 +180,45 @@
                 @endphp
                 <div class="d-mapcell" style="background:{{ $bg }}; padding:20px 0; font-size:14px; border-radius:12px;" title="Blok {{ $p['id'] }}">{{ $p['id'] }}</div>
             @endforeach
+        </div>
+        </div>
+    </div>
+@elseif($tab == 'laporan')
+    <div class="d-card">
+        <div class="d-card-header"><div class="d-card-title">Laporan Lengkap Pemakaian Herbisida</div></div>
+        <div class="d-card-body-0">
+            <table class="d-table" style="width:100%; border-collapse:collapse; font-size:14px;">
+                <thead>
+                    <tr style="background:var(--forest); color:#fff; text-align:left;">
+                        <th style="padding:12px 16px;">Blok</th>
+                        <th style="padding:12px 16px;">Afdeling</th>
+                        <th style="padding:12px 16px;">Target Gulma</th>
+                        <th style="padding:12px 16px;">Herbisida</th>
+                        <th style="padding:12px 16px;">Rekomendasi</th>
+                        <th style="padding:12px 16px;">Aktual Pakai</th>
+                        <th style="padding:12px 16px;">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($blocks as $b)
+                    <tr style="border-bottom:1px solid rgba(0,0,0,0.05);">
+                        <td style="padding:12px 16px; font-weight:700; color:var(--forest);">{{ $b->block_code }}</td>
+                        <td style="padding:12px 16px;">{{ $b->afdeling }}</td>
+                        <td style="padding:12px 16px;">{{ $b->gulma }}</td>
+                        <td style="padding:12px 16px;">{{ $b->herbisida }}</td>
+                        <td style="padding:12px 16px;">{{ $b->rekomendasi }} L</td>
+                        <td style="padding:12px 16px; font-weight:700;">{{ $b->aktual }} L</td>
+                        <td style="padding:12px 16px;">
+                            @if($b->aktual > $b->rekomendasi)
+                                <span style="background:var(--red-light); color:var(--red); padding:4px 8px; border-radius:100px; font-size:11px; font-weight:700;">Over +{{ $b->aktual - $b->rekomendasi }} L</span>
+                            @else
+                                <span style="background:var(--leaf-light); color:var(--forest); padding:4px 8px; border-radius:100px; font-size:11px; font-weight:700;">Sesuai</span>
+                            @endif
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
     </div>
 @endif
