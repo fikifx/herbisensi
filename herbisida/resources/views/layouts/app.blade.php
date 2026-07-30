@@ -74,16 +74,7 @@
 
 <!-- MOBILE SHELL -->
 <div class="mobile-shell">
-    <div class="statusbar">
-        <div class="time" id="status-time">09:41</div>
-        <div class="dots">
-            <div class="bar" style="height:4px"></div>
-            <div class="bar" style="height:6px"></div>
-            <div class="bar" style="height:8px"></div>
-            <div class="bar" style="height:10px"></div>
-        </div>
-    </div>
-    
+
     <div class="content" id="mobile-content">
         <div class="topbar">
             @hasSection('back')
