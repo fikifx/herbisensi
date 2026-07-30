@@ -113,7 +113,7 @@
                     
                     <div id="d_ai-eval-loader" class="ai-loader" style="margin-top:16px;">
                         <div class="spinner"></div>
-                        <div>AI Gemini sedang menganalisis tingkat kematian gulma...</div>
+                        <div>Sistem AI sedang menganalisis tingkat kematian gulma...</div>
                     </div>
                 </div>
             </div>

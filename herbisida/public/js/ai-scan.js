@@ -82,7 +82,7 @@ const aiScanGulma = {
       } else if (data.success && data.data && !data.data.terdeteksi) {
         alert('Gulma tidak terdeteksi dalam foto. Coba foto dari sudut yang berbeda.');
       } else {
-        alert('⚠️ ' + (data.message || 'Gagal menganalisis foto. Pastikan Gemini API Key sudah dikonfigurasi.'));
+        alert('⚠️ ' + (data.message || 'Gagal menganalisis foto. Pastikan konfigurasi API Key sudah benar.'));
       }
     } catch (err) {
       if (loader) loader.classList.remove('show');

@@ -103,7 +103,7 @@
             
             <div id="ai-loader" class="ai-loader">
                 <div class="spinner"></div>
-                <div>Menganalisis foto dengan Gemini AI...</div>
+                <div>Menganalisis foto dengan AI cerdas kami...</div>
             </div>
             
             <div id="ai-result" style="display:none; background:rgba(0,0,0,0.15); padding:12px; border-radius:10px; margin-top:12px; font-size:12px;">
