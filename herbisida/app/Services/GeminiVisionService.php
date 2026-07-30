@@ -14,59 +14,66 @@ class GeminiVisionService
 
     public function __construct()
     {
-        $this->apiKey   = env('GEMINI_API_KEY', '');
-        $this->model    = env('GEMINI_MODEL', 'gemini-1.5-flash');
-        $this->endpoint = 'https://generativelanguage.googleapis.com/v1beta/models/';
+        // Menggunakan API key Aivene yang diberikan pengguna
+        $this->apiKey   = env('GEMINI_API_KEY', 'isk-2DLUXUWGo2UzJnzhGIRCmmmk7mxPWJUP79y4vRls');
+        $this->model    = env('GEMINI_MODEL', 'gemini-3-flash');
+        $this->endpoint = 'https://api.aivene.com/v1/chat/completions';
     }
 
     /**
-     * Identifikasi gulma dari foto menggunakan Gemini Vision.
+     * Identifikasi gulma dari foto menggunakan Gemini Vision via Aivene.
      */
     public function identifyWeed(string $base64Image, string $mimeType = 'image/jpeg'): array
     {
         $prompt = <<<PROMPT
 Kamu adalah ahli agronomi perkebunan kelapa sawit Indonesia.
-Analisis foto ini dan identifikasi gulma yang terlihat.
+Analisis foto ini dan identifikasi masalah yang terlihat pada lahan atau tanaman, baik itu berupa gulma (tanaman pengganggu) maupun penyakit/hama daun.
 
 Berikan respons dalam format JSON berikut (tanpa markdown, hanya JSON murni):
 {
-  "nama": "nama gulma dalam bahasa Indonesia",
-  "nama_latin": "nama ilmiah gulma",
-  "kerapatan": "Rendah atau Sedang atau Tinggi",
-  "herbisida": "nama herbisida yang direkomendasikan untuk perkebunan sawit",
+  "nama": "nama gulma atau nama penyakit (contoh: Penyakit Bercak Daun)",
+  "nama_latin": "nama ilmiah gulma atau patogen penyebab penyakit",
+  "kerapatan": "Tingkat keparahan atau kerapatan (Rendah / Sedang / Tinggi)",
+  "herbisida": "nama herbisida (untuk gulma) atau fungisida/pestisida (untuk penyakit) yang direkomendasikan",
   "dosis": 3.0,
   "confidence": 90,
-  "deskripsi": "deskripsi singkat gulma dan alasan rekomendasi",
+  "deskripsi": "deskripsi singkat masalah, gejala, dan alasan rekomendasi penanganan",
   "terdeteksi": true
 }
 
-Jika tidak ada gulma yang terdeteksi, set "terdeteksi": false dan isi field lainnya dengan null.
+Jika tidak ada masalah (gulma/penyakit) yang terdeteksi, set "terdeteksi": false dan isi field lainnya dengan null.
 PROMPT;
 
         try {
-            $response = Http::timeout(30)->post(
-                $this->endpoint . $this->model . ':generateContent?key=' . $this->apiKey,
-                [
-                    'contents' => [[
-                        'parts' => [
-                            ['text' => $prompt],
+            $payload = [
+                'model' => $this->model,
+                'messages' => [
+                    [
+                        'role' => 'user',
+                        'content' => [
                             [
-                                'inlineData' => [
-                                    'mimeType' => $mimeType,
-                                    'data'     => $base64Image,
-                                ],
+                                'type' => 'text',
+                                'text' => $prompt
                             ],
-                        ],
-                    ]],
-                    'generationConfig' => [
-                        'temperature'     => 0.2,
-                        'maxOutputTokens' => 512,
-                    ],
-                ]
-            );
+                            [
+                                'type' => 'image_url',
+                                'image_url' => [
+                                    'url' => 'data:' . $mimeType . ';base64,' . $base64Image
+                                ]
+                            ]
+                        ]
+                    ]
+                ],
+                'temperature' => 0.2,
+                'max_tokens' => 1024,
+            ];
+
+            $response = Http::withToken($this->apiKey)
+                ->timeout(30)
+                ->post($this->endpoint, $payload);
 
             if ($response->successful()) {
-                $text = $response->json('candidates.0.content.parts.0.text', '{}');
+                $text = $response->json('choices.0.message.content', '{}');
                 $text = preg_replace('/```json\s*|\s*```/', '', $text);
                 $data = json_decode(trim($text), true);
                 if (json_last_error() === JSON_ERROR_NONE && isset($data['terdeteksi'])) {
@@ -130,22 +137,41 @@ Kategori: "Sangat Efektif" (>90%), "Efektif" (75-90%), "Cukup Efektif" (50-75%),
 PROMPT;
 
         try {
-            $response = Http::timeout(30)->post(
-                $this->endpoint . $this->model . ':generateContent?key=' . $this->apiKey,
-                [
-                    'contents' => [[
-                        'parts' => [
-                            ['text' => $prompt],
-                            ['inlineData' => ['mimeType' => $mimeType, 'data' => $base64Before]],
-                            ['inlineData' => ['mimeType' => $mimeType, 'data' => $base64After]],
-                        ],
-                    ]],
-                    'generationConfig' => ['temperature' => 0.2, 'maxOutputTokens' => 512],
-                ]
-            );
+            $payload = [
+                'model' => $this->model,
+                'messages' => [
+                    [
+                        'role' => 'user',
+                        'content' => [
+                            [
+                                'type' => 'text',
+                                'text' => $prompt
+                            ],
+                            [
+                                'type' => 'image_url',
+                                'image_url' => [
+                                    'url' => 'data:' . $mimeType . ';base64,' . $base64Before
+                                ]
+                            ],
+                            [
+                                'type' => 'image_url',
+                                'image_url' => [
+                                    'url' => 'data:' . $mimeType . ';base64,' . $base64After
+                                ]
+                            ]
+                        ]
+                    ]
+                ],
+                'temperature' => 0.2,
+                'max_tokens' => 1024,
+            ];
+
+            $response = Http::withToken($this->apiKey)
+                ->timeout(30)
+                ->post($this->endpoint, $payload);
 
             if ($response->successful()) {
-                $text = $response->json('candidates.0.content.parts.0.text', '{}');
+                $text = $response->json('choices.0.message.content', '{}');
                 $text = preg_replace('/```json\s*|\s*```/', '', $text);
                 $data = json_decode(trim($text), true);
                 if (json_last_error() === JSON_ERROR_NONE && isset($data['efektivitas'])) {
@@ -183,3 +209,4 @@ PROMPT;
         return !empty($this->apiKey) && $this->apiKey !== 'your_gemini_api_key_here';
     }
 }
+
