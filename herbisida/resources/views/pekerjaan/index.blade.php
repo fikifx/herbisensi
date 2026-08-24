@@ -212,11 +212,7 @@
         <div class="f-row-2">
             <div>
                 <label class="f-label">Kerapatan</label>
-                <select name="kerapatan" id="f-kerapatan" class="f-select">
-                    <option value="Rendah">Rendah</option>
-                    <option value="Sedang" selected>Sedang</option>
-                    <option value="Tinggi">Tinggi</option>
-                </select>
+                <input type="number" step="0.01" name="kerapatan" id="f-kerapatan" class="f-input" required>
             </div>
             <div>
                 <label class="f-label">Herbisida</label>

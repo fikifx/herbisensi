@@ -88,11 +88,7 @@ const aiScanGulma = {
         if(mainWeedLatin) finalGulma += ` (${mainWeedLatin})`;
         
         setFieldIfExists('f-gulma',      finalGulma);
-        let kString = 'Sedang';
-        let kTotal = d.kerapatan_total || d.kerapatan || 0;
-        if (kTotal < 10) kString = 'Rendah';
-        else if (kTotal > 25) kString = 'Tinggi';
-        setFieldIfExists('f-kerapatan', kString);
+        setFieldIfExists('f-kerapatan',  extractNumber(d.kerapatan_total || d.kerapatan));
         setFieldIfExists('f-herbisida',  d.herbisida);
         setFieldIfExists('f-dosis',      extractNumber(d.dosis));
         setFieldIfExists('f-gulma_ai_raw', JSON.stringify(d));
