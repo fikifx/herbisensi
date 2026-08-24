@@ -144,10 +144,16 @@
             <div>
                 <label class="f-label">Afdeling</label>
                 <select name="afdeling" id="f-afdeling" class="f-select">
-                    <option value="OF">OF</option>
+                    <option value="OA">OA</option>
                     <option value="OB">OB</option>
-                    <option value="OH">OH</option>
+                    <option value="OC">OC</option>
                     <option value="OD">OD</option>
+                    <option value="OE">OE</option>
+                    <option value="OF">OF</option>
+                    <option value="OG">OG</option>
+                    <option value="OH">OH</option>
+                    <option value="OI">OI</option>
+                    <option value="OJ">OJ</option>
                 </select>
             </div>
         </div>
