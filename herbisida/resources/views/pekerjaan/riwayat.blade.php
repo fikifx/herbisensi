@@ -38,7 +38,7 @@
                     <input type="text" id="batch" name="batch" required style="width:100%; padding:12px; border-radius:8px; border:none; font-family:'Inter',sans-serif; font-weight:600; color:var(--ink);">
                 </div>
                 <div style="margin-bottom:16px;">
-                    <label style="display:block; font-size:11.5px; margin-bottom:6px; opacity:0.9;">Volume Jerigen (Liter)</label>
+                    <label style="display:block; font-size:11.5px; margin-bottom:6px; opacity:0.9;">Qty (Liter)</label>
                     <input type="number" name="jerigen" value="20" required style="width:100%; padding:12px; border-radius:8px; border:none; font-family:'Inter',sans-serif; font-weight:600; color:var(--ink);">
                 </div>
                 <button type="submit" class="btn leaf" style="margin-top:0; padding:12px; border-radius:100px;">Simpan Pemakaian</button>
@@ -142,7 +142,7 @@
                     <input type="text" id="batch" name="batch" required style="width:100%; padding:14px; border-radius:12px; border:1px solid #DDE6D8; font-family:'Inter',sans-serif; font-size:15px; background:#F7FAF5; outline:none; transition:border 0.2s;" onfocus="this.style.borderColor='var(--leaf)'" onblur="this.style.borderColor='#DDE6D8'">
                 </div>
                 <div style="margin-bottom:24px;">
-                    <label style="display:block; font-size:13px; font-weight:600; color:var(--ink); margin-bottom:8px;">Volume (Liter)</label>
+                    <label style="display:block; font-size:13px; font-weight:600; color:var(--ink); margin-bottom:8px;">Qty (Liter)</label>
                     <input type="number" name="jerigen" value="20" required style="width:100%; padding:14px; border-radius:12px; border:1px solid #DDE6D8; font-family:'Inter',sans-serif; font-size:15px; background:#F7FAF5; outline:none; transition:border 0.2s;" onfocus="this.style.borderColor='var(--leaf)'" onblur="this.style.borderColor='#DDE6D8'">
                 </div>
                 <button type="submit" class="d-btn d-btn-green d-btn-full" style="padding:14px; font-size:15px;">Simpan Pemakaian</button>

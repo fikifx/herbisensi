@@ -23,6 +23,11 @@ Route::middleware('auth')->group(function () {
     // Beranda
     Route::get('/beranda', [BerandaController::class, 'index'])->name('beranda');
 
+    // Master Data
+    Route::resource('/master-blocks', \App\Http\Controllers\MasterBlockController::class);
+    Route::resource('/master-gulmas', \App\Http\Controllers\MasterGulmaController::class);
+    Route::resource('/master-doses', \App\Http\Controllers\MasterDosisController::class);
+
     // Pekerjaan (Blok CRUD)
     Route::get('/pekerjaan',            [BlokController::class, 'index'])->name('pekerjaan.index');
     Route::post('/pekerjaan',           [BlokController::class, 'store'])->name('pekerjaan.store');

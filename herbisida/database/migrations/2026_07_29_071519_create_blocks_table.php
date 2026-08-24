@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('gulma')->comment('Jenis gulma dominan');
             $table->string('gulma_foto')->nullable()->comment('Path foto gulma yang di-upload');
             $table->text('gulma_ai_raw')->nullable()->comment('Raw JSON response dari Gemini AI');
-            $table->enum('kerapatan', ['Rendah', 'Sedang', 'Tinggi'])->default('Sedang');
+            $table->integer('kerapatan')->default(0)->comment('Angka kerapatan');
             $table->string('herbisida')->comment('Nama herbisida rekomendasi');
             $table->decimal('dosis', 5, 2)->comment('Dosis L/Ha');
             $table->integer('rekomendasi')->comment('Total liter = luas x dosis');

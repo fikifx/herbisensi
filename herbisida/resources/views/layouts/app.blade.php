@@ -38,6 +38,19 @@
                 <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
                 Dashboard
             </a>
+            <div class="sidebar-section-label" style="margin-top:10px">Master Data</div>
+            <a href="{{ route('master-blocks.index') }}" class="sidebar-item {{ request()->routeIs('master-blocks.*') ? 'active' : '' }}">
+                <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                Master Blok
+            </a>
+            <a href="{{ route('master-gulmas.index') }}" class="sidebar-item {{ request()->routeIs('master-gulmas.*') ? 'active' : '' }}">
+                <svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                Master Gulma
+            </a>
+            <a href="{{ route('master-doses.index') }}" class="sidebar-item {{ request()->routeIs('master-doses.*') ? 'active' : '' }}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2v7.31"/><path d="M14 9.3V1.99"/><path d="M8.5 2h7"/><path d="M14 9.3a6.5 6.5 0 1 1-4 0"/></svg>
+                Master Dosis
+            </a>
             <div class="sidebar-section-label" style="margin-top:10px">Pengaturan</div>
             <a href="{{ route('akun') }}" class="sidebar-item {{ request()->routeIs('akun') ? 'active' : '' }}">
                 <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>

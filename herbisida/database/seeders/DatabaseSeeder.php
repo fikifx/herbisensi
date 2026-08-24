@@ -13,6 +13,12 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        $this->call([
+            MasterBlockSeeder::class,
+            MasterGulmaSeeder::class,
+            MasterDosisSeeder::class,
+        ]);
+
         // Seeder User Login
         User::updateOrCreate(
             ['email' => 'admin@herbi.com'],
@@ -25,7 +31,7 @@ class DatabaseSeeder extends Seeder
         $blocks = [
             [
                 'block_code' => 'A12', 'afdeling' => 'OF', 'luas' => 20,
-                'gulma' => 'Ageratum conyzoides (Bandotan)', 'kerapatan' => 'Sedang',
+                'gulma' => 'Ageratum conyzoides (Bandotan)', 'kerapatan' => 5,
                 'herbisida' => 'Glyphosate 480 SL', 'dosis' => 3, 'rekomendasi' => 60,
                 'aktual' => 70, 'status' => 'Selesai',
                 'pemakaian' => [
@@ -39,19 +45,19 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'block_code' => 'A13', 'afdeling' => 'OF', 'luas' => 15,
-                'gulma' => 'Cyperus rotundus (Teki)', 'kerapatan' => 'Tinggi',
+                'gulma' => 'Cyperus rotundus (Teki)', 'kerapatan' => 15,
                 'herbisida' => 'Glyphosate 480 SL', 'dosis' => 3, 'rekomendasi' => 45,
                 'aktual' => 0, 'status' => 'Belum Selesai', 'pemakaian' => [], 'evaluasi' => null,
             ],
             [
                 'block_code' => 'A14', 'afdeling' => 'OF', 'luas' => 18,
-                'gulma' => 'Imperata cylindrica (Alang-alang)', 'kerapatan' => 'Sedang',
+                'gulma' => 'Imperata cylindrica (Alang-alang)', 'kerapatan' => 8,
                 'herbisida' => 'Paraquat Dichloride 276 SL', 'dosis' => 3, 'rekomendasi' => 54,
                 'aktual' => 0, 'status' => 'Belum Selesai', 'pemakaian' => [], 'evaluasi' => null,
             ],
             [
                 'block_code' => 'B03', 'afdeling' => 'OB', 'luas' => 17,
-                'gulma' => 'Mikania micrantha (Sembung rambat)', 'kerapatan' => 'Tinggi',
+                'gulma' => 'Mikania micrantha (Sembung rambat)', 'kerapatan' => 20,
                 'herbisida' => 'Metsulfuron Methyl 20 WG', 'dosis' => 3.1, 'rekomendasi' => 53,
                 'aktual' => 61, 'status' => 'Selesai',
                 'pemakaian' => [
@@ -64,7 +70,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'block_code' => 'C11', 'afdeling' => 'OH', 'luas' => 16,
-                'gulma' => 'Ageratum conyzoides (Bandotan)', 'kerapatan' => 'Sedang',
+                'gulma' => 'Ageratum conyzoides (Bandotan)', 'kerapatan' => 7,
                 'herbisida' => 'Glyphosate 480 SL', 'dosis' => 3, 'rekomendasi' => 49,
                 'aktual' => 56, 'status' => 'Selesai',
                 'pemakaian' => [
@@ -77,7 +83,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'block_code' => 'D07', 'afdeling' => 'OB', 'luas' => 16,
-                'gulma' => 'Cyperus rotundus (Teki)', 'kerapatan' => 'Rendah',
+                'gulma' => 'Cyperus rotundus (Teki)', 'kerapatan' => 2,
                 'herbisida' => 'Glyphosate 480 SL', 'dosis' => 3, 'rekomendasi' => 49,
                 'aktual' => 55, 'status' => 'Selesai',
                 'pemakaian' => [
@@ -90,7 +96,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'block_code' => 'E02', 'afdeling' => 'OH', 'luas' => 14,
-                'gulma' => 'Imperata cylindrica (Alang-alang)', 'kerapatan' => 'Sedang',
+                'gulma' => 'Imperata cylindrica (Alang-alang)', 'kerapatan' => 6,
                 'herbisida' => 'Paraquat Dichloride 276 SL', 'dosis' => 3, 'rekomendasi' => 43,
                 'aktual' => 48, 'status' => 'Selesai',
                 'pemakaian' => [

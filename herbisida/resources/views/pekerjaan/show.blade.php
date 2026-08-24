@@ -29,9 +29,23 @@
     <div class="section-title">Informasi Lahan</div>
     <div class="card">
         <div class="row"><div class="lbl">Luas Blok</div><div class="val">{{ $block->luas }} Ha</div></div>
+        
+        @if(isset($masterBlockDetail))
+            <div class="row"><div class="lbl">Tahun Tanam</div><div class="val">{{ $masterBlockDetail->tahun_tanam }} ({{ $masterBlockDetail->kategori_umur }})</div></div>
+            <div class="row"><div class="lbl">Topografi</div><div class="val">{{ $masterBlockDetail->topografi }}</div></div>
+        @endif
+        
+        <hr style="border:0; border-top:1px dashed var(--line); margin:8px 0;">
         <div class="row"><div class="lbl">Target Gulma</div><div class="val">{{ $block->gulma }}</div></div>
         <div class="row"><div class="lbl">Tingkat Kerapatan</div><div class="val">{{ $block->kerapatan }}</div></div>
-        <div class="row"><div class="lbl">Herbisida</div><div class="val">{{ $block->herbisida }}</div></div>
+        
+        <hr style="border:0; border-top:1px dashed var(--line); margin:8px 0;">
+        @if(isset($masterDosisDetail))
+            <div class="row"><div class="lbl">Pekerjaan</div><div class="val">{{ $masterDosisDetail->item_pekerjaan }} ({{ $masterDosisDetail->jenis_gulma }})</div></div>
+            <div class="row"><div class="lbl">Herbisida</div><div class="val">{{ $block->herbisida }} ({{ $masterDosisDetail->material_1 }} {{ $masterDosisDetail->material_2 ? '+ '.$masterDosisDetail->material_2 : '' }})</div></div>
+        @else
+            <div class="row"><div class="lbl">Herbisida</div><div class="val">{{ $block->herbisida }}</div></div>
+        @endif
         <div class="row"><div class="lbl">Dosis Rekomendasi</div><div class="val">{{ $block->dosis }} L/Ha</div></div>
     </div>
 
@@ -58,9 +72,22 @@
                 <div class="d-card-body-0">
                     <div class="d-table-row"><div class="d-table-lbl">Afdeling</div><div class="d-table-val">{{ $block->afdeling }}</div></div>
                     <div class="d-table-row"><div class="d-table-lbl">Luas Blok</div><div class="d-table-val">{{ $block->luas }} Ha</div></div>
-                    <div class="d-table-row"><div class="d-table-lbl">Target Gulma</div><div class="d-table-val">{{ $block->gulma }}</div></div>
+                    
+                    @if(isset($masterBlockDetail))
+                        <div class="d-table-row"><div class="d-table-lbl">Tahun Tanam</div><div class="d-table-val">{{ $masterBlockDetail->tahun_tanam }} ({{ $masterBlockDetail->kategori_umur }})</div></div>
+                        <div class="d-table-row"><div class="d-table-lbl">Topografi</div><div class="d-table-val">{{ $masterBlockDetail->topografi }}</div></div>
+                    @endif
+                    
+                    <div class="d-table-row" style="margin-top:8px; border-top:1px dashed var(--line); padding-top:8px;"><div class="d-table-lbl">Target Gulma</div><div class="d-table-val">{{ $block->gulma }}</div></div>
                     <div class="d-table-row"><div class="d-table-lbl">Kerapatan</div><div class="d-table-val">{{ $block->kerapatan }}</div></div>
-                    <div class="d-table-row"><div class="d-table-lbl">Herbisida</div><div class="d-table-val">{{ $block->herbisida }}</div></div>
+                    
+                    @if(isset($masterDosisDetail))
+                        <div class="d-table-row" style="margin-top:8px; border-top:1px dashed var(--line); padding-top:8px;"><div class="d-table-lbl">Pekerjaan</div><div class="d-table-val">{{ $masterDosisDetail->item_pekerjaan }} ({{ $masterDosisDetail->jenis_gulma }})</div></div>
+                        <div class="d-table-row"><div class="d-table-lbl">Herbisida</div><div class="d-table-val">{{ $block->herbisida }} ({{ $masterDosisDetail->material_1 }} {{ $masterDosisDetail->material_2 ? '+ '.$masterDosisDetail->material_2 : '' }} {{ $masterDosisDetail->material_3 ? '+ '.$masterDosisDetail->material_3 : '' }})</div></div>
+                    @else
+                        <div class="d-table-row" style="margin-top:8px; border-top:1px dashed var(--line); padding-top:8px;"><div class="d-table-lbl">Herbisida</div><div class="d-table-val">{{ $block->herbisida }}</div></div>
+                    @endif
+                    
                     <div class="d-table-row"><div class="d-table-lbl">Dosis Rek.</div><div class="d-table-val">{{ $block->dosis }} L/Ha</div></div>
                 </div>
             </div>
@@ -104,7 +131,12 @@
         <div class="f-row-2">
             <div>
                 <label class="f-label">Kode Blok</label>
-                <input type="text" name="block_code" id="f-block-code" class="f-input" placeholder="Misal: A15" required>
+                <select name="block_code" id="f-block-code" class="f-select" onchange="document.getElementById('f-luas').value = this.options[this.selectedIndex].dataset.luas || ''; autoCalcRek();" required>
+                    <option value="" data-luas="">Pilih Blok</option>
+                    @foreach($masterBlocks as $mb)
+                        <option value="{{ $mb->block_code }}" data-luas="{{ $mb->luas_tanam }}">{{ $mb->block_code }}</option>
+                    @endforeach
+                </select>
             </div>
             <div>
                 <label class="f-label">Afdeling</label>
@@ -125,11 +157,7 @@
         <div class="f-row-2">
             <div>
                 <label class="f-label">Kerapatan</label>
-                <select name="kerapatan" id="f-kerapatan" class="f-select">
-                    <option value="Rendah">Rendah</option>
-                    <option value="Sedang" selected>Sedang</option>
-                    <option value="Tinggi">Tinggi</option>
-                </select>
+                <input type="number" name="kerapatan" id="f-kerapatan" class="f-input" placeholder="Angka" required>
             </div>
             <div>
                 <label class="f-label">Herbisida</label>

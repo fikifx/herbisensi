@@ -37,6 +37,16 @@ function openModal(mode, blockId) {
   document.getElementById('f-status').value       = 'Belum Selesai';
   document.getElementById('f-herbisida').value    = 'Glyphosate 480 SL';
   document.getElementById('f-rekomendasi').value  = '';
+  
+  // Reset AI Scan UI
+  const aiResult = document.getElementById('ai-result');
+  if(aiResult) aiResult.style.display = 'none';
+  const aiPreview = document.getElementById('ai-foto-preview-container');
+  if(aiPreview) aiPreview.innerHTML = '';
+  const aiInput = document.getElementById('ai-foto-input');
+  if(aiInput) aiInput.value = '';
+  const aiLabel = document.getElementById('ai-filename-label');
+  if(aiLabel) aiLabel.innerText = 'Klik untuk Upload Foto (Maks 10)';
 
   const form    = document.getElementById('crud-form');
   const codeField = document.getElementById('f-block-code');

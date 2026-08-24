@@ -11,21 +11,29 @@ const aiScanGulma = {
 
   init() {
     const input   = document.getElementById('ai-foto-input');
-    const preview = document.getElementById('ai-foto-preview');
+    const container = document.getElementById('ai-foto-preview-container');
     if (!input) return;
 
     input.addEventListener('change', e => {
-      const file = e.target.files[0];
-      if (!file) return;
+      if (container) container.innerHTML = '';
+      const files = e.target.files;
+      if (!files || files.length === 0) return;
 
-      const reader = new FileReader();
-      reader.onload = ev => {
-        if (preview) {
-          preview.src = ev.target.result;
-          preview.classList.add('show');
-        }
-      };
-      reader.readAsDataURL(file);
+      Array.from(files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = ev => {
+          const img = document.createElement('img');
+          img.src = ev.target.result;
+          img.className = 'photo-preview show';
+          img.style.width = '80px';
+          img.style.height = '80px';
+          img.style.objectFit = 'cover';
+          img.style.borderRadius = '8px';
+          img.style.flexShrink = '0';
+          if (container) container.appendChild(img);
+        };
+        reader.readAsDataURL(file);
+      });
     });
   },
 
@@ -45,11 +53,21 @@ const aiScanGulma = {
     if (btn) { btn.disabled = true; btn.textContent = '⏳ Menganalisis...'; }
 
     try {
+      const files = input.files;
       const formData = new FormData();
-      formData.append('foto', input.files[0]);
+      for(let i = 0; i < files.length; i++) {
+        const compressedFile = await compressImage(files[i]);
+        formData.append('foto[]', compressedFile);
+      }
       formData.append('_token', document.querySelector('meta[name=csrf-token]').content);
 
-      const res  = await fetch('/api/ai/scan-gulma', { method: 'POST', body: formData });
+      const res  = await fetch('/api/ai/scan-gulma', { 
+        method: 'POST', 
+        headers: {
+          'Accept': 'application/json'
+        },
+        body: formData 
+      });
       const data = await res.json();
 
       if (loader) loader.classList.remove('show');
@@ -58,10 +76,21 @@ const aiScanGulma = {
         const d = data.data;
 
         // Auto-fill form fields
-        setFieldIfExists('f-gulma',      `${d.nama} (${d.nama_latin})`);
-        setFieldIfExists('f-kerapatan',  d.kerapatan);
+        let mainWeedName = d.nama || '';
+        let mainWeedLatin = d.nama_latin || '';
+        if(d.weeds && d.weeds.length > 0) {
+            const dom = d.weeds.reduce((prev, curr) => (prev.total_individu > curr.total_individu) ? prev : curr, d.weeds[0]);
+            mainWeedName = dom.nama;
+            if(dom.nama_latin) mainWeedLatin = dom.nama_latin;
+        }
+        
+        let finalGulma = mainWeedName;
+        if(mainWeedLatin) finalGulma += ` (${mainWeedLatin})`;
+        
+        setFieldIfExists('f-gulma',      finalGulma);
+        setFieldIfExists('f-kerapatan',  extractNumber(d.kerapatan_total || d.kerapatan));
         setFieldIfExists('f-herbisida',  d.herbisida);
-        setFieldIfExists('f-dosis',      d.dosis);
+        setFieldIfExists('f-dosis',      extractNumber(d.dosis));
         setFieldIfExists('f-gulma_ai_raw', JSON.stringify(d));
 
         // Auto-calc rekomendasi
@@ -70,8 +99,28 @@ const aiScanGulma = {
         // Show result badge
         if (result) {
           result.style.display = 'block';
-          document.getElementById('ai-nama').textContent     = `${d.nama} (${d.nama_latin})`;
-          document.getElementById('ai-kerapatan').textContent = d.kerapatan;
+          
+          const tbody = document.getElementById('ai-gulma-table-body');
+          if(tbody) {
+              tbody.innerHTML = '';
+              let we = d.weeds || [{nama: d.nama, total_individu: d.kerapatan, kerapatan: d.kerapatan}];
+              we.forEach(w => {
+                  let tr = document.createElement('tr');
+                  tr.innerHTML = `
+                    <td style="padding: 4px 0;">${w.nama}</td>
+                    <td style="padding: 4px 0; text-align:right;">${w.total_individu}</td>
+                    <td style="padding: 4px 0; text-align:right;">${w.kerapatan}</td>
+                  `;
+                  tbody.appendChild(tr);
+              });
+          }
+          
+          const totalIndivEl = document.getElementById('ai-total-individu');
+          if(totalIndivEl) totalIndivEl.textContent = d.total_individu || d.kerapatan || '-';
+          
+          const totalKerapEl = document.getElementById('ai-total-kerapatan');
+          if(totalKerapEl) totalKerapEl.textContent = d.kerapatan_total || d.kerapatan || '-';
+
           document.getElementById('ai-herbisida').textContent = d.herbisida;
           document.getElementById('ai-dosis').textContent    = `${d.dosis} L/Ha`;
           document.getElementById('ai-confidence').textContent = `${d.confidence}%`;
@@ -113,12 +162,26 @@ const aiScanEvaluasi = {
     if (btn) { btn.disabled = true; btn.textContent = '⏳ Menganalisis...'; }
 
     try {
+      const fileBefore = fotoBefore.files[0];
+      const fileAfter  = fotoAfter.files[0];
+      
+      const [compBefore, compAfter] = await Promise.all([
+        compressImage(fileBefore),
+        compressImage(fileAfter)
+      ]);
+      
       const formData = new FormData();
-      formData.append('foto_sebelum', fotoBefore.files[0]);
-      formData.append('foto_sesudah', fotoAfter.files[0]);
+      formData.append('foto_sebelum', compBefore);
+      formData.append('foto_sesudah', compAfter);
       formData.append('_token', document.querySelector('meta[name=csrf-token]').content);
 
-      const res  = await fetch('/api/ai/scan-evaluasi', { method: 'POST', body: formData });
+      const res  = await fetch('/api/ai/scan-evaluasi', { 
+        method: 'POST', 
+        headers: {
+          'Accept': 'application/json'
+        },
+        body: formData 
+      });
       const data = await res.json();
 
       if (loader) loader.classList.remove('show');
@@ -177,7 +240,50 @@ function setupPhotoPreview(inputId, previewId) {
 // ===== UTILITY =====
 function setFieldIfExists(id, value) {
   const el = document.getElementById(id);
-  if (el && value !== null && value !== undefined) el.value = value;
+  if (el && value !== null && value !== undefined && value !== '') el.value = value;
+}
+
+function extractNumber(val) {
+  if (val === null || val === undefined) return '';
+  let str = val.toString().replace(/,/g, '.');
+  let num = parseFloat(str.replace(/[^\d.-]/g, ''));
+  return isNaN(num) ? '' : num;
+}
+
+// ===== CLIENT-SIDE COMPRESSION =====
+async function compressImage(file, maxWidth = 1200, quality = 0.7) {
+  if (!file || !file.type.match(/image.*/)) return file;
+  
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = event => {
+      const img = new Image();
+      img.src = event.target.result;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+
+        if (width > maxWidth) {
+          height = Math.round((height * maxWidth) / width);
+          width = maxWidth;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        canvas.toBlob(blob => {
+          resolve(new File([blob], file.name, {
+            type: 'image/jpeg',
+            lastModified: Date.now()
+          }));
+        }, 'image/jpeg', quality);
+      };
+    };
+  });
 }
 
 // Init on DOM ready

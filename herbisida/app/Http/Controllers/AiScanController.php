@@ -16,7 +16,8 @@ class AiScanController extends Controller
     public function scanGulma(Request $request)
     {
         $request->validate([
-            'foto' => 'required|image|max:5120',
+            'foto' => 'required|array|max:10',
+            'foto.*' => 'image|max:5120',
         ]);
 
         if (!$this->gemini->isConfigured()) {
@@ -26,11 +27,16 @@ class AiScanController extends Controller
             ], 422);
         }
 
-        $file      = $request->file('foto');
-        $base64    = base64_encode(file_get_contents($file->getRealPath()));
-        $mimeType  = $file->getMimeType();
+        $files = $request->file('foto');
+        $imagesData = [];
+        foreach($files as $file) {
+            $imagesData[] = [
+                'base64' => base64_encode(file_get_contents($file->getRealPath())),
+                'mime' => $file->getMimeType()
+            ];
+        }
 
-        $result = $this->gemini->identifyWeed($base64, $mimeType);
+        $result = $this->gemini->identifyWeed($imagesData);
 
         return response()->json($result);
     }
