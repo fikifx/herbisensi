@@ -88,7 +88,11 @@ const aiScanGulma = {
         if(mainWeedLatin) finalGulma += ` (${mainWeedLatin})`;
         
         setFieldIfExists('f-gulma',      finalGulma);
-        setFieldIfExists('f-kerapatan',  extractNumber(d.kerapatan_total || d.kerapatan));
+        let kString = 'Sedang';
+        let kTotal = d.kerapatan_total || d.kerapatan || 0;
+        if (kTotal < 10) kString = 'Rendah';
+        else if (kTotal > 25) kString = 'Tinggi';
+        setFieldIfExists('f-kerapatan', kString);
         setFieldIfExists('f-herbisida',  d.herbisida);
         setFieldIfExists('f-dosis',      extractNumber(d.dosis));
         setFieldIfExists('f-gulma_ai_raw', JSON.stringify(d));
@@ -114,24 +118,40 @@ const aiScanGulma = {
                   tbody.appendChild(tr);
               });
           }
-          
-          const totalIndivEl = document.getElementById('ai-total-individu');
-          if(totalIndivEl) totalIndivEl.textContent = d.total_individu || d.kerapatan || '-';
-          
-          const totalKerapEl = document.getElementById('ai-total-kerapatan');
-          if(totalKerapEl) totalKerapEl.textContent = d.kerapatan_total || d.kerapatan || '-';
-
+          if(document.getElementById('ai-total-frame')) document.getElementById('ai-total-frame').textContent = input.files.length + ' m²';
+          document.getElementById('ai-nama').textContent     = `${d.nama} (${d.nama_latin})`;
+          if(document.getElementById('ai-total-individu')) document.getElementById('ai-total-individu').textContent = d.total_individu;
+          if(document.getElementById('ai-kerapatan-total')) document.getElementById('ai-kerapatan-total').textContent = d.kerapatan_total + ' ind/m²';
           document.getElementById('ai-herbisida').textContent = d.herbisida;
           document.getElementById('ai-dosis').textContent    = `${d.dosis} L/Ha`;
           document.getElementById('ai-confidence').textContent = `${d.confidence}%`;
+          
           const bar = document.getElementById('ai-confidence-bar');
           if (bar) bar.style.width = d.confidence + '%';
+          
           document.getElementById('ai-deskripsi').textContent = d.deskripsi;
+          
+          const table = document.getElementById('ai-weeds-table');
+          if (table) {
+              table.innerHTML = '';
+              if (d.weeds && Array.isArray(d.weeds)) {
+                  d.weeds.forEach(w => {
+                      let kr = d.kerapatan_total > 0 ? ((w.kerapatan / d.kerapatan_total) * 100).toFixed(1) : 0;
+                      let tr = document.createElement('tr');
+                      tr.innerHTML = `
+                          <td style="padding: 6px; border-bottom: 1px solid rgba(255,255,255,0.1);">${w.nama}</td>
+                          <td style="padding: 6px; text-align:right; border-bottom: 1px solid rgba(255,255,255,0.1);">${w.kerapatan}</td>
+                          <td style="padding: 6px; text-align:right; border-bottom: 1px solid rgba(255,255,255,0.1);">${kr}%</td>
+                      `;
+                      table.appendChild(tr);
+                  });
+              }
+          }
         }
       } else if (data.success && data.data && !data.data.terdeteksi) {
         alert('Gulma tidak terdeteksi dalam foto. Coba foto dari sudut yang berbeda.');
       } else {
-        alert('⚠️ ' + (data.message || 'Gagal menganalisis foto. Pastikan konfigurasi API Key sudah benar.'));
+        alert('⚠️ ' + (data.message || 'Gagal menganalisis foto. Pastikan Gemini API Key sudah dikonfigurasi.'));
       }
     } catch (err) {
       if (loader) loader.classList.remove('show');

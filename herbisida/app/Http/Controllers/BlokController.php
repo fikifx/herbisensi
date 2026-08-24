@@ -59,10 +59,10 @@ class BlokController extends Controller
     {
         $data = $request->validate([
             'block_code'  => 'required|string|max:10|unique:blocks,block_code',
-            'afdeling'    => 'required|in:OF,OB,OH,OD',
+            'afdeling'    => 'required|string|max:10',
             'luas'        => 'required|numeric|min:0.1',
             'gulma'       => 'required|string|max:255',
-            'kerapatan'   => 'required|numeric',
+            'kerapatan'   => 'required|string',
             'herbisida'   => 'required|string|max:255',
             'dosis'       => 'required|numeric|min:0.1',
             'rekomendasi' => 'required|integer|min:1',
@@ -97,10 +97,10 @@ class BlokController extends Controller
     public function update(Request $request, Block $block)
     {
         $data = $request->validate([
-            'afdeling'    => 'required|in:OF,OB,OH,OD',
+            'afdeling'    => 'required|string|max:10',
             'luas'        => 'required|numeric|min:0.1',
             'gulma'       => 'required|string|max:255',
-            'kerapatan'   => 'required|numeric',
+            'kerapatan'   => 'required|string',
             'herbisida'   => 'required|string|max:255',
             'dosis'       => 'required|numeric|min:0.1',
             'rekomendasi' => 'required|integer|min:1',

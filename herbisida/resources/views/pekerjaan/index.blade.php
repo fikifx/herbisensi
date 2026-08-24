@@ -84,6 +84,23 @@
         @csrf
         <input type="hidden" name="_method" id="f-method" value="POST">
         
+        @if ($errors->any())
+            <div style="background-color: #ffcccc; color: #cc0000; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+                <strong>Gagal Menyimpan!</strong>
+                <ul style="margin-top: 5px; margin-bottom: 0; padding-left: 20px;">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            <script>
+                // Jika ada error saat submit form, otomatis buka modal lagi
+                document.addEventListener("DOMContentLoaded", function() {
+                    openModal('add');
+                });
+            </script>
+        @endif
+        
         <!-- Fitur AI Scan -->
         <div class="ai-scan-box">
             <h3>🤖 Deteksi Gulma Otomatis</h3>
@@ -92,7 +109,7 @@
                 <svg viewBox="0 0 24 24" stroke="currentColor" style="stroke: #fff;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
                 <span id="ai-filename-label">Klik untuk Upload / Ambil Foto</span>
             </label>
-            <input type="file" id="ai-foto-input" name="gulma_foto" accept="image/*" style="display:none;" onchange="document.getElementById('ai-filename-label').innerText = this.files[0] ? this.files[0].name : 'Klik untuk Upload / Ambil Foto'">
+            <input type="file" id="ai-foto-input" name="gulma_foto[]" accept="image/*" multiple style="display:none;" onchange="document.getElementById('ai-filename-label').innerText = this.files.length > 1 ? this.files.length + ' foto terpilih' : (this.files[0] ? this.files[0].name : 'Klik untuk Upload / Ambil Foto')">
             <input type="hidden" name="gulma_ai_raw" id="f-gulma_ai_raw">
             
             <img id="ai-foto-preview" class="photo-preview" alt="Preview">
@@ -109,14 +126,38 @@
             <div id="ai-result" style="display:none; background:rgba(0,0,0,0.15); padding:12px; border-radius:10px; margin-top:12px; font-size:12px;">
                 <div class="ai-result-badge">✅ Teridentifikasi oleh AI</div>
                 <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
-                    <span style="opacity:0.8">Nama Gulma</span>
+                    <span style="opacity:0.8">Total Luas Sampel (Frame)</span>
+                    <strong id="ai-total-frame">-</strong>
+                </div>
+                
+                <div style="margin: 10px 0; background:rgba(0,0,0,0.2); border-radius:6px; overflow:hidden;">
+                    <table style="width:100%; border-collapse: collapse; font-size: 11px; text-align: left;">
+                        <thead style="background:rgba(255,255,255,0.1);">
+                            <tr>
+                                <th style="padding: 6px;">Jenis Gulma</th>
+                                <th style="padding: 6px; text-align:right;">Kerapatan</th>
+                                <th style="padding: 6px; text-align:right;">Relatif (KR)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ai-weeds-table">
+                            <!-- rows injected via JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+                    <span style="opacity:0.8">Gulma Dominan</span>
                     <strong id="ai-nama">-</strong>
                 </div>
                 <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
-                    <span style="opacity:0.8">Kerapatan</span>
-                    <strong id="ai-kerapatan">-</strong>
+                    <span style="opacity:0.8">Total Individu</span>
+                    <strong id="ai-total-individu">-</strong>
                 </div>
                 <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+                    <span style="opacity:0.8">Kerapatan Total</span>
+                    <strong id="ai-kerapatan-total">-</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:6px; border-top:1px solid rgba(255,255,255,0.1); padding-top:6px;">
                     <span style="opacity:0.8">Rekomendasi Herbisida</span>
                     <strong id="ai-herbisida">-</strong>
                 </div>
@@ -139,7 +180,12 @@
         <div class="f-row-2">
             <div>
                 <label class="f-label">Kode Blok</label>
-                <input type="text" name="block_code" id="f-block-code" class="f-input" placeholder="Misal: A15" required>
+                <select name="block_code" id="f-block-code" class="f-select" required onchange="handleBlockChange(this)">
+                    <option value="">Pilih Blok...</option>
+                    @foreach($masterBlocks as $mb)
+                        <option value="{{ $mb->block_code }}" data-luas="{{ $mb->luas_tanam }}">{{ $mb->block_code }}</option>
+                    @endforeach
+                </select>
             </div>
             <div>
                 <label class="f-label">Afdeling</label>
@@ -225,6 +271,33 @@
         });
     }
 });
+
+function handleBlockChange(select) {
+    var option = select.options[select.selectedIndex];
+    var luas = option.getAttribute('data-luas');
+    var val = select.value;
+
+    if (val) {
+        // Otomatis Afdeling (ambil 2 huruf pertama dari block_code)
+        var afdeling = val.substring(0, 2).toUpperCase();
+        var afdSelect = document.getElementById('f-afdeling');
+        if(afdSelect) {
+            for(var i=0; i<afdSelect.options.length; i++) {
+                if(afdSelect.options[i].value === afdeling) {
+                    afdSelect.selectedIndex = i;
+                    break;
+                }
+            }
+        }
+    }
+
+    if (luas) {
+        document.getElementById('f-luas').value = luas;
+        if(typeof autoCalcRek === 'function') {
+            autoCalcRek();
+        }
+    }
+}
 </script>
 <script src="/js/ai-scan.js"></script>
 @endpush
